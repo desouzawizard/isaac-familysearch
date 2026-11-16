@@ -202,6 +202,7 @@ terms on such a page mean nothing. Check `recordType`/`title` before treating a 
   why a page missing from one filming may be readable in another.)
 - ⛔ **`f.recordCountry` breaks both the full-text and catalogue endpoints.** Never use it.
 - ⛔ **`q.anyPlace` does not constrain full-text search** — it filters only *indexed* records.
+- ★ **Scoping to one film works:** `&q.groupName=<DGS>` or `&f.groupName=<DGS>` (tested 15 Nov 2026: «"Barão do Rio Claro"» 247 → 35 with either). ⛔ **A wrong DGS returns 0, not an error.** A mistyped film number (106… for 105…) once produced a "film scoping doesn't work" note that voided a negative. Take the DGS from the viewer («Film # …»), not from notes, and run one phrase you know is on that film before trusting a scoped zero.
 - ⛔⛔ **`f.recordYear0` is NOT a lower bound — it selects a CENTURY BUCKET.** `f.recordYear0=1800`
   means *the 1800s only* and silently drops everything from 1900 on. Measured: `"Agueda"` across
   three collections = **1,149** with it and **9,784** without; the 1900 bucket alone held 6,143

@@ -1,6 +1,6 @@
 # isaac-familysearch — genealogy research skills for Claude
 
-Nine **Agent Skills** that teach Claude how to do Brazilian, Portuguese and Italian
+Ten **Agent Skills** that teach Claude how to do Brazilian, Portuguese and Italian
 genealogical research on FamilySearch and its partner archives: which URLs and APIs
 actually work, what a zero result does and does not prove, how to read a handwritten
 register page, and which edits silently fail to save.
@@ -94,13 +94,14 @@ control search rather than trusting a number that may be a year old.
 | `familysearch-fulltext-sweep` | **Yes** — the API and its traps are global; the measured coverage figures are Brazil-specific |
 | `familysearch-catalog-and-images` | **Yes** — catalog → film → page → attach works for any filmed archive |
 | `familysearch-compiled-sources` | **Yes** — Digital Library, Genealogies and Cemeteries are global |
+| `familysearch-platform-api-reads` | **Yes** — the `/platform` API is global; the jurisdiction example is Brazilian |
 | `genealogy-research-audit` | **Yes** — the nine checks are country-agnostic |
 | `familysearch-ordinance-requests` | **Yes**, within the membership gate above |
 | `newspaperarchive-search` | **Mostly** — the URL grammar is general; NewspaperArchive's own holdings are strongest for the US |
 | `genealogy-partner-sites` | **Partly** — recipes are general, the measured coverage is Brazil, Portugal and Italy |
 | `brazilian-genealogy-search` | **No** — Brazilian corpora, record formulas and naming culture throughout |
 
-Researching somewhere else? The first six transfer unchanged. Replace
+Researching somewhere else? The first seven transfer unchanged. Replace
 `brazilian-genealogy-search` with the equivalent knowledge for your own archives, and
 keep its structure: a control word per record type, a spelling ladder, and where filiation
 lives in that country's records.
@@ -118,6 +119,7 @@ Read this before starting genealogy work in this repo's domain.
 | Any navigating, reading or editing of the Family Tree; triaging Record Hints or Research Suggestions | `familysearch-tree-and-hints` |
 | A search returned zero, or two terms must co-occur, or a record set must be proven absent | `familysearch-fulltext-sweep` |
 | A record should exist but name search *and* full-text find nothing | `familysearch-catalog-and-images` |
+| Checking for a duplicate before creating a person; what a place was called on a date; pulling a family in one call; watching a profile for edits | `familysearch-platform-api-reads` |
 | The ancestor is Brazilian; or records of enslaved or freed people are in scope | `brazilian-genealogy-search` |
 | A name has stalled in the record index; an obituary or a death date is wanted | `newspaperarchive-search` |
 | Looking for published genealogies, local histories, cemeteries, another researcher's tree | `familysearch-compiled-sources` |
@@ -165,6 +167,7 @@ skills/
   familysearch-compiled-sources/SKILL.md
   familysearch-fulltext-sweep/SKILL.md
   familysearch-ordinance-requests/SKILL.md
+  familysearch-platform-api-reads/SKILL.md
   familysearch-tree-and-hints/SKILL.md
   genealogy-partner-sites/SKILL.md
   genealogy-research-audit/SKILL.md
@@ -189,21 +192,32 @@ instead of magnifying further, why a certified transcript is independent evidenc
 than a copy, and a table of editing traps that each silently lost a save.
 
 ### `familysearch-fulltext-sweep`
-*311 lines.* Calls the full-text search API directly instead of scraping the
+*312 lines.* Calls the full-text search API directly instead of scraping the
 client-rendered results page — one `fetch` in place of a navigate plus a ten-second wait,
 and it returns each document's full page OCR. Covers the deep-paging ceiling and
 partitioning a corpus into sub-1,000 slices, the place facet as a coverage test, the
 co-occurrence sweep as the only reliable AND, triage without opening the viewer, finding
 the clerical formula before trusting a name search, and measured coverage outside Rio de
-Janeiro.
+Janeiro. Also: scoping a search to one film with `groupName`, and why a wrong film number
+returns a silent zero.
 
 ### `familysearch-catalog-and-images`
-*243 lines.* The pipeline for records no index reaches: jurisdiction → catalog → film →
+*245 lines.* The pipeline for records no index reaches: jurisdiction → catalog → film →
 page → attach. Access rights in film lists, the Images API over GraphQL with a bearer
 token, locating a page by date within a film, reading DeepZoom tiles directly to get past
 the viewer's zoom cap, and checking the tree before declaring a find. Written for the
 case where the image exists but was never indexed, or was indexed under a mangled name —
-a Genzano birth indexed as *Parisi* for *Passeri*.
+a Genzano birth indexed as *Parisi* for *Passeri*. Also warns that a catalog's *place* is
+a claim: one "Rio de Janeiro" parish film turned out to be Minas Gerais.
+
+### `familysearch-platform-api-reads`
+*104 lines.* The documented `/platform` API, called read-only from a signed-in tab with the
+user's own session: tree search as a duplicate check before Add Child or Add Spouse,
+family and pedigree pulls, the change feed to find collaborators, conditional GETs to
+notice when a profile is edited, the places API for what a town was called (and which
+seat held its records) on a given date, and date standardizing before a vitals save. The
+traps: per-resource Accept headers, errors that live in the `Warning` header, `q.*` terms
+that score rather than filter. Human pace; stops on any 403, 429 or licence notice.
 
 ### `brazilian-genealogy-search`
 *237 lines.* Brazilian records specifically. Opens with the prime directive — never trust

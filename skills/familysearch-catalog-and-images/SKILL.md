@@ -77,6 +77,8 @@ records, all civil) — say so instead of browsing.
 ("Births 1876–79" opened at 1866; a "Death" group was a birth register; "1954" meant 1854).
 **Open the first image and read its date before trusting either.**
 
+⛔ **The catalog's *place* is a claim too.** Tested 15 Nov 2026: koha:23252, filed under Itatiaia and Resende (Rio de Janeiro), indexed into the **RJ** Catholic collection, is really **Santo Antônio do Itatiaia, Ouro Branco (Minas Gerais)** plus **N.S. da Boa Viagem, Itabirito (MG)**. The image heading reads «deste Bispado de Marianna… Comarca de Villa Rica». Clues in the record itself: originals held at a different state's archive (Arquivo Arquidiocesano de Mariana), and a note naming another state's town. **Before treating a film as a jurisdiction's books, read one image's own heading** (bishopric, comarca, parish dedication). One call. The flip side: a misfiled film's personas sit in the wrong state's collection, so a search in the right state misses them.
+
 ## 2. Images API (GraphQL, bearer token required)
 
 ```js
